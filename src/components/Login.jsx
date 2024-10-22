@@ -22,7 +22,6 @@ function Login() {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setError(""); // Reset error on new attempt
 		try {
 			const res = await axios.post(
 				"/api/users/login",
@@ -58,24 +57,22 @@ function Login() {
 						<FiMail className="w-6 h-6 text-gray-400 ml-3" />
 						<input
 							type="email"
-							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200"
+							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
 							placeholder="Email"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							required
-							aria-describedby="emailHelp" // Accessibility
 						/>
 					</div>
 					<div className="flex items-center border rounded-md border-gray-600 bg-gray-700">
 						<FiLock className="w-6 h-6 text-gray-400 ml-3" />
 						<input
 							type="password"
-							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200"
+							className="w-full px-4 py-2 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
 							placeholder="Password"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
-							aria-describedby="passwordHelp" // Accessibility
 						/>
 					</div>
 					<div className="flex items-center justify-between mt-4">
@@ -90,7 +87,7 @@ function Login() {
 						</p>
 						<button
 							type="submit"
-							className="px-6 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200"
+							className="px-6 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
 							disabled={loading}
 						>
 							{loading ? (
@@ -102,12 +99,7 @@ function Login() {
 					</div>
 				</form>
 				{error && (
-					<div
-						className="mt-4 text-red-300 text-center"
-						aria-live="assertive" // Accessibility
-					>
-						{error}
-					</div>
+					<div className="mt-4 text-red-300 text-center">{error}</div>
 				)}
 			</div>
 		</div>
