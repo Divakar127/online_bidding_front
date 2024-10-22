@@ -10,13 +10,9 @@ const BidForm = () => {
 
 	useEffect(() => {
 		const fetchAuctionItem = async () => {
-			try {
-				const res = await axios.get(`${import.meta.env.VITE_API_PATH}/api/auctions/${id}`);
-				setAuctionItem(res.data);
-				setBidAmount(res.data.startingBid || "");
-			} catch (error) {
-				console.error("Error fetching auction item:", error);
-			}
+			const res = await axios.get(`/api/auctions/${id}`);
+			setAuctionItem(res.data);
+			setBidAmount(res.data.startingBid || "");
 		};
 
 		fetchAuctionItem();
@@ -30,7 +26,7 @@ const BidForm = () => {
 				.find((row) => row.startsWith("jwt="))
 				?.split("=")[1];
 			await axios.post(
-				`${import.meta.env.VITE_API_PATH}/api/bids`,
+				"/api/bids",
 				{ auctionItemId: id, bidAmount },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
