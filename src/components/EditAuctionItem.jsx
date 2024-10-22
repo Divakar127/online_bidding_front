@@ -14,7 +14,7 @@ const EditAuctionItem = () => {
 
 	useEffect(() => {
 		const fetchAuctionItem = async () => {
-			const res = await axios.get(`${import.meta.env.VITE_API_PATH}/api/auctions/${id}`); // Updated to use environment variable
+			const res = await axios.get(`/api/auctions/${id}`);
 			setAuctionItem(res.data);
 		};
 		fetchAuctionItem();
@@ -30,7 +30,7 @@ const EditAuctionItem = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		await axios.put(`${import.meta.env.VITE_API_PATH}/api/auctions/${id}`, auctionItem); // Updated to use environment variable
+		await axios.put(`/api/auctions/${id}`, auctionItem);
 		navigate(`/auction/${id}`);
 	};
 
