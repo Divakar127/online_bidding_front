@@ -10,20 +10,13 @@ function AuctionList() {
 	const [searchResults, setSearchResults] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
-	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchAuctionItems = async () => {
-			try {
-				const res = await axios.get(`${import.meta.env.VITE_API_PATH}/api/auctions`);
-				setAuctionItems(res.data);
-				setSearchResults(res.data);
-				setTotalPages(Math.ceil(res.data.length / ITEMS_PER_PAGE));
-			} catch (error) {
-				console.error("Error fetching auction items:", error);
-			} finally {
-				setLoading(false);
-			}
+			const res = await axios.get("/api/auctions");
+			setAuctionItems(res.data);
+			setSearchResults(res.data);
+			setTotalPages(Math.ceil(res.data.length / ITEMS_PER_PAGE));
 		};
 		fetchAuctionItems();
 	}, []);
@@ -33,20 +26,36 @@ function AuctionList() {
 			const filteredItems = auctionItems.filter((item) => {
 				const title = item.title || "";
 				const description = item.description || "";
-				const startingBid = item.startingBid ? item.startingBid.toString() : "";
-				const endDate = item.endDate ? new Date(item.endDate).toLocaleDateString() : "";
+				const startingBid = item.startingBid
+					? item.startingBid.toString()
+					: "";
+				const endDate = item.endDate
+					? new Date(item.endDate).toLocaleDateString()
+					: "";
 
 				const searchTermString = searchTerm.toLowerCase();
 
+				const matchesTitle = title
+					.toLowerCase()
+					.includes(searchTermString);
+				const matchesDescription = description
+					.toLowerCase()
+					.includes(searchTermString);
+				const matchesStartingBid =
+					startingBid.includes(searchTermString);
+				const matchesEndDate = endDate.includes(searchTermString);
+
 				return (
-					title.toLowerCase().includes(searchTermString) ||
-					description.toLowerCase().includes(searchTermString) ||
-					startingBid.includes(searchTermString) ||
-					endDate.includes(searchTermString)
+					matchesTitle ||
+					matchesDescription ||
+					matchesStartingBid ||
+					matchesEndDate
 				);
 			});
 			setSearchResults(filteredItems);
-			setTotalPages(Math.ceil(filteredItems.length / ITEMS_PER_PAGE) || 0);
+			setTotalPages(
+				Math.ceil(filteredItems.length / ITEMS_PER_PAGE) || 0
+			);
 			setCurrentPage(1);
 		};
 		filterItems();
@@ -61,10 +70,6 @@ function AuctionList() {
 	const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 	const endIndex = startIndex + ITEMS_PER_PAGE;
 	const paginatedItems = searchResults.slice(startIndex, endIndex);
-
-	if (loading) {
-		return <div className="text-white text-center">Loading auction items...</div>;
-	}
 
 	return (
 		<div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-lg shadow-lg">
@@ -98,7 +103,7 @@ function AuctionList() {
 						</p>
 						<p className="text-gray-400 mt-2">
 							<b>End Date: </b>
-							{item.endDate ? new Date(item.endDate).toLocaleDateString() : "N/A"}
+							{new Date(item.endDate).toLocaleDateString()}
 						</p>
 					</li>
 				))}
@@ -114,7 +119,7 @@ function AuctionList() {
 					Previous
 				</button>
 				<span className="text-gray-400">
-					Page {currentPage} of {totalPages === 0 ? 1 : totalPages}
+					Page {currentPage} of {totalPages == 0 ? 1 : totalPages}
 				</span>
 				<button
 					onClick={() => handlePageChange(currentPage + 1)}
